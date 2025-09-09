@@ -1,6 +1,7 @@
 package com.nova.blog.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +20,10 @@ public class User {
     @Column(name = "user_name", nullable = false, length = 20)
     private String name;
 
+    @Column(nullable = false)
+    @Email
     private String email;
+
     private String password;
     private String about;
 }
