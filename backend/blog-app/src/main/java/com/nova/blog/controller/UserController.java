@@ -3,6 +3,7 @@ package com.nova.blog.controller;
 import com.nova.blog.payload.ApiResponse;
 import com.nova.blog.payload.UserDTO;
 import com.nova.blog.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UserController {
 
     // POST - Create User
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
 
         UserDTO userResponseDTO = userService.createUser(userDTO);
         return ResponseEntity.ok().body(userResponseDTO);
@@ -28,7 +29,7 @@ public class UserController {
 
     // PUT - Update User
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @Valid @RequestBody UserDTO userDTO) {
 
         UserDTO userResponseDTO = userService.updateUser(userDTO, id);
         return ResponseEntity.ok().body(userResponseDTO);
