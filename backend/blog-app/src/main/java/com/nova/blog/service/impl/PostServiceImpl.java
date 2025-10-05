@@ -5,11 +5,16 @@ import com.nova.blog.model.Category;
 import com.nova.blog.model.Post;
 import com.nova.blog.model.User;
 import com.nova.blog.payload.PostDTO;
+import com.nova.blog.payload.PostResponse;
 import com.nova.blog.repository.CategoryRepository;
 import com.nova.blog.repository.PostRepository;
 import com.nova.blog.repository.UserRepository;
 import com.nova.blog.service.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -69,12 +74,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPosts() {
+    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
 
-        List<Post> posts = postRepository.findAll();
+        Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Post> pagePost = postRepository.findAll(p);
+
+        List<Post> posts = pagePost.getContent();
 
         List<PostDTO> postDTOS = posts.stream().map((post) -> modelMapper.map(post, PostDTO.class)).toList();
-        return postDTOS;
+
+        // prepare response
+        PostResponse postResponse = new PostResponse();
+
+        // content
+        postResponse.setData(postDTOS);
+
+        // pagination-metadata
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
     }
 
     @Override

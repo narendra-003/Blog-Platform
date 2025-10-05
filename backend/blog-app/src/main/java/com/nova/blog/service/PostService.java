@@ -1,6 +1,7 @@
 package com.nova.blog.service;
 
 import com.nova.blog.payload.PostDTO;
+import com.nova.blog.payload.PostResponse;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface PostService {
     void deletePost(Integer postID);
 
     // get all posts
-    List<PostDTO> getAllPosts();
+    PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     // get single post
     PostDTO getPostByID(Integer postID);

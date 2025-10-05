@@ -2,6 +2,7 @@ package com.nova.blog.controller;
 
 import com.nova.blog.payload.ApiResponse;
 import com.nova.blog.payload.PostDTO;
+import com.nova.blog.payload.PostResponse;
 import com.nova.blog.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +44,15 @@ public class PostController {
 
     // get all posts
     @GetMapping("/")
-    public ResponseEntity<List<PostDTO>> getAllPosts() {
+    public ResponseEntity<PostResponse> getAllPosts(
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "3", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+    ) {
 
-        List<PostDTO> postDTOS = postService.getAllPosts();
-        return ResponseEntity.ok().body(postDTOS);
+        PostResponse postResponse = postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
+        return ResponseEntity.ok().body(postResponse);
     }
 
     // get post by id
