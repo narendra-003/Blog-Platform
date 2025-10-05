@@ -1,0 +1,76 @@
+package com.nova.blog.controller;
+
+import com.nova.blog.payload.ApiResponse;
+import com.nova.blog.payload.PostDTO;
+import com.nova.blog.service.PostService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/posts")
+public class PostController {
+
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    // create
+    @PostMapping("/user/{userID}/category/{categoryID}")
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, @PathVariable Integer userID, @PathVariable Integer categoryID) {
+        PostDTO postResponseDTO = postService.createPost(postDTO, userID, categoryID);
+        return ResponseEntity.ok().body(postResponseDTO);
+    }
+
+    // update post
+    @PutMapping("/{postID}")
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable Integer postID) {
+
+        PostDTO responsePostDTO = postService.updatePost(postDTO, postID);
+        return ResponseEntity.ok().body(responsePostDTO);
+    }
+
+    // delete post by id
+    @DeleteMapping("/{postID}")
+    public ResponseEntity<ApiResponse> deletePostById(@PathVariable Integer postID) {
+
+        postService.deletePost(postID);
+        return ResponseEntity.ok().body(new ApiResponse("Post deleted successfully", true));
+    }
+
+    // get all posts
+    @GetMapping("/")
+    public ResponseEntity<List<PostDTO>> getAllPosts() {
+
+        List<PostDTO> postDTOS = postService.getAllPosts();
+        return ResponseEntity.ok().body(postDTOS);
+    }
+
+    // get post by id
+    @GetMapping("/{postID}")
+    public ResponseEntity<PostDTO> getPostById(@PathVariable Integer postID) {
+
+        PostDTO postDTO = postService.getPostByID(postID);
+        return ResponseEntity.ok().body(postDTO);
+    }
+
+    // get by user
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<PostDTO>> getPostsByUser(@PathVariable Integer userID) {
+
+        List<PostDTO> posts = postService.getPostsByUser(userID);
+        return ResponseEntity.ok().body(posts);
+    }
+
+    // get by category
+    @GetMapping("/category/{categoryID}")
+    public ResponseEntity<List<PostDTO>> getPostsByCategory(@PathVariable Integer categoryID) {
+
+        List<PostDTO> posts = postService.getPostsByCategory(categoryID);
+        return ResponseEntity.ok().body(posts);
+    }
+
+}
