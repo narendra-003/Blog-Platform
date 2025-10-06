@@ -128,4 +128,12 @@ public class PostServiceImpl implements PostService {
         List<PostDTO> postDTOS = posts.stream().map((post) -> modelMapper.map(post, PostDTO.class)).toList();
         return postDTOS;
     }
+
+    @Override
+    public List<PostDTO> searchPosts(String keyword) {
+
+        List<Post> posts = postRepository.findByTitleContainingIgnoreCase(keyword);
+        List<PostDTO> postDTOS = posts.stream().map((post) -> modelMapper.map(post, PostDTO.class)).toList();
+        return postDTOS;
+    }
 }

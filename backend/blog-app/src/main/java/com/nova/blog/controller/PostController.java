@@ -1,5 +1,6 @@
 package com.nova.blog.controller;
 
+import com.nova.blog.config.AppConstants;
 import com.nova.blog.payload.ApiResponse;
 import com.nova.blog.payload.PostDTO;
 import com.nova.blog.payload.PostResponse;
@@ -45,10 +46,10 @@ public class PostController {
     // get all posts
     @GetMapping("/")
     public ResponseEntity<PostResponse> getAllPosts(
-            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "3", required = false) Integer pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+            @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir
     ) {
 
         PostResponse postResponse = postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
@@ -77,6 +78,15 @@ public class PostController {
 
         List<PostDTO> posts = postService.getPostsByCategory(categoryID);
         return ResponseEntity.ok().body(posts);
+    }
+
+    // search
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<PostDTO>> searchPostByTitle(
+            @PathVariable("keyword") String keyword
+    ) {
+        List<PostDTO> postDTOS = postService.searchPosts(keyword);
+        return ResponseEntity.ok().body(postDTOS);
     }
 
 }
