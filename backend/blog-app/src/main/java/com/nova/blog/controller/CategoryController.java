@@ -17,7 +17,6 @@ public class CategoryController {
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-
     }
 
     // create
