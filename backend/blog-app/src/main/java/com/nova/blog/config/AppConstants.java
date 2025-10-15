@@ -6,4 +6,9 @@ public class AppConstants {
     public static final String PAGE_SIZE = "10";
     public static final String SORT_BY = "postId";
     public static final String SORT_DIR = "asc";
+
+    public static final Integer JWT_EXPIRATION = 60 *60 * 1000;
+
+    public static final String ROLE_NORMAL = "ROLE_NORMAL";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
 }

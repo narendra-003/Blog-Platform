@@ -7,6 +7,7 @@ import com.nova.blog.model.User;
 import com.nova.blog.payload.UserDTO;
 import com.nova.blog.repository.UserRepository;
 import com.nova.blog.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +16,13 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
@@ -27,6 +31,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistException("A user with this email already exists " + userDTO.getEmail());
         }
 
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User newUser = userRepository.save(UserMapper.toModel(userDTO));
         return UserMapper.toDTO(newUser);
     }
@@ -44,7 +49,14 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
+
         user.setPassword(userDTO.getPassword());
+        // Check if password needs to be updated
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+            user.setPassword(encodedPassword);
+        }
+
         user.setAbout(userDTO.getAbout());
 
         User updatedUser = userRepository.save(user);

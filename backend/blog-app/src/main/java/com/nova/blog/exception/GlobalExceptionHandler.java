@@ -58,4 +58,11 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiResponse> handleApiException(ApiException ex) {
+
+        ApiResponse apiResponse = new ApiResponse(ex.getMessage(), false);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.UNAUTHORIZED);
+    }
 }
