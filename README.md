@@ -1,7 +1,5 @@
 📝 Blog Platform – Backend (Spring Boot)
 
-📌 Project Description
-
 This project is a RESTful Blog Platform backend developed using Java and Spring Boot.
 It provides secure and scalable APIs for managing users, blog posts, categories, and comments, following industry-standard backend development practices.
 
